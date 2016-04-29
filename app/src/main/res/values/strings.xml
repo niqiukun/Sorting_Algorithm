@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Sorting Algorithm</string>
+    <string-array name="sorting_methods">
+        <item>Bubble Sort</item>
+        <item>Insertion Sort</item>
+    </string-array>
+    <string name="total_count_label">Total operations count: </string>
+</resources>
