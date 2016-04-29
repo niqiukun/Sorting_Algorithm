@@ -18,7 +18,6 @@ import java.util.Random;
 
 class DrawView extends View {
     Paint paint = new Paint();
-    public boolean invalidated = false;
     public int n = 50;
     public int[] list = new int[n];
     public int purple_pointer1 = -1;
@@ -76,11 +75,13 @@ public class MainActivity extends AppCompatActivity {
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
         drawView = new DrawView(this);
         frameLayout.addView(drawView);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sorting_methods, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        final CheckBox cb = (CheckBox) findViewById(R.id.checkBox);
+        cb.setChecked(false);
     }
 
     public void shuffle(View view){
@@ -89,13 +90,13 @@ public class MainActivity extends AppCompatActivity {
             shuffleArray(drawView.list);
             drawView.invalidate();
         }else{
+            stopSorting = true;
             Button sortButton = (Button) findViewById(R.id.button2);
             sortButton.setEnabled(true);
             CheckBox cb = (CheckBox) findViewById(R.id.checkBox);
             cb.setEnabled(true);
             Spinner spinner = (Spinner) findViewById(R.id.spinner);
             spinner.setEnabled(true);
-            stopSorting = true;
             shuffleButton.setText("Shuffle");
         }
 
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         int temp = drawView.list[i];
         drawView.list[i] = drawView.list[j];
         drawView.list[j] = temp;
-        totalCount++;
+        totalCount = totalCount + 3;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insert(int a, int b){
-        for(int i = a; i > b; i--){
+        for(int i = a; i > b && !stopSorting; i--){
             displace(i, i - 1);
         }
     }
@@ -282,10 +283,10 @@ public class MainActivity extends AppCompatActivity {
                             insert(i, 0);
                         }
                     }
+                    stopSorting = true;
                     if(i == drawView.n){
                         finishSorting();
                     }
-                    stopSorting = true;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -307,6 +308,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void finishSorting(){
+        final Button b = (Button) findViewById(R.id.shuffleButton);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                b.setEnabled(false);
+            }
+        });
         for (int i = 0; i < drawView.n; i++) {
             drawView.green_pointer = i;
             runOnUiThread(new Runnable() {
@@ -327,5 +335,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         drawView.green_pointer = -1;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                b.setEnabled(true);
+            }
+        });
     }
 }
