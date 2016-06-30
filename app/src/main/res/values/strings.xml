@@ -4,5 +4,5 @@
         <item>Bubble Sort</item>
         <item>Insertion Sort</item>
     </string-array>
-    <string name="total_count_label">Total operations count: </string>
+    <string name="total_count_label">Total operations count: %d</string>
 </resources>

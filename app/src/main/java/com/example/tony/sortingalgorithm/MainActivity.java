@@ -269,10 +269,10 @@ public class MainActivity extends AppCompatActivity {
             sortThread = new Thread(){
                 @Override
                 public void run() {
-                    int i = 1; int j = 1;
+                    int i;
                     for(i = 1; i < drawView.n && !stopSorting; i++){
                         boolean flag = true;
-                        for(j = i - 1; j >= 0 && !stopSorting; j--){
+                        for(int j = i - 1; j >= 0 && !stopSorting; j--){
                             if(compare(i, j)){
                                 insert(i, j + 1);
                                 flag = false;
